@@ -1,0 +1,3 @@
+import type { Permission,Role } from '@/lib/domain/backend-types'
+export const ROLE_PERMISSIONS:Record<Role,readonly Permission[]>={OWNER:['tenant:manage','bookings:read','bookings:write','bookings:cancel','payments:manage','blocks:manage','pricing:manage','reports:read'],MANAGER:['bookings:read','bookings:write','bookings:cancel','payments:manage','blocks:manage','pricing:manage','reports:read'],STAFF:['bookings:read','bookings:write','blocks:manage']}
+export const hasPermission=(role:Role,permission:Permission,overrides:Permission[]=[])=>new Set([...ROLE_PERMISSIONS[role],...overrides]).has(permission)

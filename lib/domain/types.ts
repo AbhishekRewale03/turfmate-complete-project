@@ -1,0 +1,17 @@
+export type Tenant = { id: string; slug: string; businessName: string; ownerName: string; status: 'active' | 'inactive'; plan: 'demo' | 'starter'; createdAt: string }
+export type Turf = { id: string; tenantId: string; name: string; shortName: string; timezone: string; address: string; locality: string; mapUrl: string; phone: string; whatsapp: string; sports: string[]; amenities: string[]; publicSlug: string; initials: string; brand: { primary: string; accent: string } }
+export type BookingStatus = 'confirmed' | 'cancelled'
+export type PaymentStatus = 'unpaid' | 'advance' | 'paid' | 'complimentary'
+export type BookingSource = 'online' | 'manual'
+export type PricingSnapshot = { rules: PricingRule[]; lines: PriceLine[] }
+export type Booking = { id: string; tenantId: string; turfId: string; customerName: string; phone: string; email?: string; startAt: string; endAt: string; durationMinutes: number; status: BookingStatus; source: BookingSource; calculatedPrice: number; finalPrice: number; priceOverridden: boolean; pricingSnapshot: PricingSnapshot; paidAmount: number; paymentStatus: PaymentStatus; paymentMethod: string; notes?: string; createdAt: string }
+export type BookingDraft = { tenantId: string; turfId: string; selectedDate: string; startAt: string; endAt: string; durationMinutes: number; calculatedPrice: number; pricingSnapshot: PricingSnapshot; customerName?: string; phone?: string; email?: string; updatedAt: string }
+export type Hold = { id: string; tenantId: string; turfId: string; draftId: string; startAt: string; endAt: string; expiresAt: string; createdAt: string }
+export type Block = { id: string; tenantId: string; turfId: string; startAt: string; endAt: string; reason: 'Maintenance' | 'Tournament' | 'Private event' | 'Cleaning' | 'Owner blocked' | 'Other'; notes?: string }
+export type PricingRule = { id: string; label: string; dayType: 'weekday' | 'weekend'; startMinute: number; endMinute: number; pricePerHour: number }
+export type PriceLine = { label: string; minutes: number; rate: number; amount: number }
+export type OperatingDay = { closed: boolean; openMinute: number; closeMinute: number }
+export type OperatingHours = Record<number, OperatingDay>
+export type BookingSettings = { paymentMode: 'full' | 'fixed' | 'percentage'; advanceValue: number; minDurationMinutes: number; maxDurationMinutes: number; slotIntervalMinutes: 30 | 60; cancellationEnabled: boolean; cancellationCutoffHours: number; bookingWindowDays: number; holdDurationMinutes: number }
+export type TenantData = { tenant: Tenant; turf: Turf; bookings: Booking[]; holds: Hold[]; blocks: Block[]; pricingRules: PricingRule[]; operatingHours: OperatingHours; settings: BookingSettings; draft?: BookingDraft }
+export type OwnerSession = { tenantId: string; email: string } | null

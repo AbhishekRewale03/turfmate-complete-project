@@ -1,0 +1,4 @@
+import 'server-only'
+import { z } from 'zod'
+const schema=z.object({FIREBASE_PROJECT_ID:z.string().min(1),APP_URL:z.string().url(),BOOKING_LOOKUP_HMAC_SECRET:z.string().min(32),CRON_SECRET:z.string().min(32),PAYMENT_PROVIDER:z.enum(['mock','cashfree']),CASHFREE_ENV:z.enum(['sandbox','production']).optional(),CASHFREE_CLIENT_ID:z.string().min(1).optional(),CASHFREE_CLIENT_SECRET:z.string().min(1).optional(),PAYMENT_SETTLEMENT_MODE:z.literal('PLATFORM'),APP_CHECK_MODE:z.enum(['disabled','monitor','enforce']).default('disabled')}).superRefine((v,c)=>{if(v.PAYMENT_PROVIDER==='cashfree'&&(!v.CASHFREE_CLIENT_ID||!v.CASHFREE_CLIENT_SECRET))c.addIssue({code:'custom',message:'Cashfree credentials are required when PAYMENT_PROVIDER=cashfree.'})})
+export function serverEnv(){return schema.parse(process.env)}

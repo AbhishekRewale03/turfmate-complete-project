@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function activeMember(tenantId) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/tenants/$(tenantId)/members/$(request.auth.uid))
+        && get(/databases/$(database)/documents/tenants/$(tenantId)/members/$(request.auth.uid)).data.status == 'ACTIVE';
+    }
+
+    match /publicTurfs/{slug} {
+      allow read: if resource.data.keys().hasOnly([
+        'tenantId','turfId','slug','name','shortName','address','locality','mapUrl',
+        'phone','whatsapp','sports','amenities','timezone','branding','isBookingEnabled'
+      ]);
+      allow write: if false;
+    }
+
+    match /tenants/{tenantId} {
+      allow read: if activeMember(tenantId);
+      allow write: if false;
+      match /{document=**} {
+        allow read: if activeMember(tenantId);
+        allow write: if false;
+      }
+    }
+
+    match /users/{uid} { allow read: if signedIn() && request.auth.uid == uid; allow write: if false; }
+    match /bookingLocators/{id} { allow read, write: if false; }
+    match /paymentOrders/{id} { allow read, write: if false; }
+    match /webhookEvents/{id} { allow read, write: if false; }
+    match /refunds/{id} { allow read, write: if false; }
+    match /rateLimits/{id} { allow read, write: if false; }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

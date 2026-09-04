@@ -1,0 +1,6 @@
+import { NextResponse } from 'next/server'
+import { DomainError } from '@/lib/domain/errors'
+export const requestId=(headers:Headers)=>headers.get('x-request-id')?.slice(0,100)??crypto.randomUUID()
+export const ok=<T>(data:T,id:string,status=200)=>NextResponse.json({success:true,data,error:null,requestId:id},{status})
+export function fail(error:unknown,id:string){const e=error instanceof DomainError?error:new DomainError('INTERNAL_ERROR','Something went wrong. Please try again.',500);if(!(error instanceof DomainError))console.error(JSON.stringify({level:'error',requestId:id,message:e.message}));return NextResponse.json({success:false,data:null,error:{code:e.code,message:e.message},requestId:id},{status:e.status,headers:e.retryAfterSeconds?{'Retry-After':String(e.retryAfterSeconds)}:undefined})}
+export async function limitedJson(request:Request,maxBytes=16_384){const length=Number(request.headers.get('content-length')??0);if(length>maxBytes)throw new DomainError('VALIDATION_ERROR','Request is too large.',413);const raw=await request.text();if(raw.length>maxBytes)throw new DomainError('VALIDATION_ERROR','Request is too large.',413);try{return JSON.parse(raw) as unknown}catch{throw new DomainError('VALIDATION_ERROR','Request body must be valid JSON.',400)}}

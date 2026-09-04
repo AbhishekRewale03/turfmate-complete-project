@@ -1,0 +1,5 @@
+export interface CreateOrderInput{merchantOrderId:string;amount:number;currency:'INR';customer:{id:string;name:string;phone:string;email?:string};returnUrl:string;notifyUrl:string;expiresAt:string;idempotencyKey:string;requestId:string}
+export interface ProviderOrder{providerOrderId:string;paymentSessionId:string;status:'ACTIVE'|'PAID'|'EXPIRED'|'FAILED';amount:number;currency:string;expiresAt:string;providerPaymentId?:string}
+export interface RefundInput{refundId:string;providerOrderId:string;amount:number;note:string;idempotencyKey:string}
+export interface ProviderRefund{providerRefundId:string;status:'PENDING'|'SUCCESS'|'FAILED'|'CANCELLED';amount:number}
+export interface PaymentProvider{createOrder(input:CreateOrderInput):Promise<ProviderOrder>;getOrder(orderId:string):Promise<ProviderOrder>;getPaymentsForOrder(orderId:string):Promise<Array<{id:string;status:string;amount:number;currency:string}>>;verifyWebhook(rawBody:string,timestamp:string,signature:string):boolean;createRefund(input:RefundInput):Promise<ProviderRefund>;getRefund(orderId:string,refundId:string):Promise<ProviderRefund>}

@@ -1,0 +1,14 @@
+{
+  "indexes": [
+    { "collectionGroup": "holds", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "status", "order": "ASCENDING" }, { "fieldPath": "expiresAt", "order": "ASCENDING" }] },
+    { "collectionGroup": "holds", "queryScope": "COLLECTION_GROUP", "fields": [{ "fieldPath": "status", "order": "ASCENDING" }, { "fieldPath": "expiresAt", "order": "ASCENDING" }] },
+    { "collectionGroup": "holds", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "turfId", "order": "ASCENDING" }, { "fieldPath": "status", "order": "ASCENDING" }, { "fieldPath": "expiresAt", "order": "ASCENDING" }] },
+    { "collectionGroup": "holds", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "customerSessionId", "order": "ASCENDING" }, { "fieldPath": "status", "order": "ASCENDING" }] },
+    { "collectionGroup": "paymentAttempts", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "paymentCollectionMode", "order": "ASCENDING" }, { "fieldPath": "status", "order": "ASCENDING" }, { "fieldPath": "paymentClaimedAt", "order": "DESCENDING" }] },
+    { "collectionGroup": "paymentAttempts", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "status", "order": "ASCENDING" }, { "fieldPath": "updatedAt", "order": "DESCENDING" }] },
+    { "collectionGroup": "paymentOrders", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "status", "order": "ASCENDING" }, { "fieldPath": "updatedAt", "order": "ASCENDING" }] },
+    { "collectionGroup": "slotLocks", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "turfId", "order": "ASCENDING" }, { "fieldPath": "slotStartAt", "order": "ASCENDING" }] },
+    { "collectionGroup": "refunds", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "status", "order": "ASCENDING" }, { "fieldPath": "updatedAt", "order": "ASCENDING" }] }
+  ],
+  "fieldOverrides": []
+}

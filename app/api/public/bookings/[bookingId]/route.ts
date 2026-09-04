@@ -1,0 +1,7 @@
+import { FirestoreRepository } from '@/lib/repositories/firestore/firestore-repository'
+import { verifyCustomerToken } from '@/lib/services/payments/payment-service'
+import { fail,ok,requestId } from '@/lib/api/response'
+import { DomainError } from '@/lib/domain/errors'
+import { verifyAppCheck } from '@/lib/api/app-check'
+import { clientIdentifier,enforceRateLimit } from '@/lib/rate-limit'
+export async function GET(request:Request,{params}:{params:Promise<{bookingId:string}>}){const id=requestId(request.headers);try{const bookingId=(await params).bookingId.slice(0,64);await verifyAppCheck(request);await enforceRateLimit({scope:'booking-detail',identifier:`${clientIdentifier(request)}:${bookingId}`,limit:30,windowMs:60_000});const token=request.headers.get('authorization')?.replace(/^Bearer\s+/i,'')??'';if(!token||!(await verifyCustomerToken(token,bookingId,'booking')))throw new DomainError('FORBIDDEN','Booking access is invalid or expired.',403);const b=await new FirestoreRepository().getBookingByLocator(bookingId);if(!b)throw new DomainError('BOOKING_NOT_FOUND','Booking not found.',404);return ok({id:b.id,turfId:b.turfId,customerName:b.customerName,startAt:b.startAt,endAt:b.endAt,durationMinutes:b.durationMinutes,finalPrice:b.finalPrice,amountPaid:b.amountPaid,balanceDue:b.balanceDue,currency:b.currency,bookingStatus:b.bookingStatus,paymentStatus:b.paymentStatus,paymentMethod:b.paymentMethod,manualRefundRequired:b.manualRefundRequired,source:b.source},id)}catch(error){return fail(error,id)}}

@@ -1,0 +1,2 @@
+import { LegalPage,Section } from '@/components/legal-page'
+export default function Page(){return <LegalPage title="Contact us"><Section title="Booking support"><p>For venue, timing, or cancellation questions, contact the turf using the phone or WhatsApp details shown on its public booking page.</p></Section><Section title="TurfMate support"><p>Email <a className="font-semibold text-primary" href="mailto:support@turfmate.in">support@turfmate.in</a>. Include your booking ID, but never send card details, UPI PINs, passwords, or one-time codes.</p></Section></LegalPage>}
