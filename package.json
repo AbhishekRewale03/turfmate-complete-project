@@ -28,7 +28,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "firebase": "^12.18.0",
-    "firebase-admin": "^14.3.0",
+    "firebase-admin": "13.10.0",
     "geist": "^1.7.2",
     "jose": "^6.2.10",
     "lucide-react": "^1.16.0",
